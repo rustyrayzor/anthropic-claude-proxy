@@ -16,7 +16,9 @@ const DEFAULT_COMMAND = ["bunx", "opencode-claude-max-proxy"];
 
 const DEFAULT_MODEL_IDS = [
   "claude-opus-4.6",
+  "claude-opus-4-6-thinking",
   "claude-sonnet-4.6",
+  "claude-sonnet-4-6-thinking",
   "claude-haiku-4",
 ] as const;
 

@@ -18,7 +18,7 @@
       "models": {
         "type": "array",
         "items": { "type": "string" },
-        "default": ["claude-opus-4.6", "claude-opus-4.5", "claude-sonnet-4.6", "claude-sonnet-4.5", "claude-haiku-4", "claude-haiku-3.5"]
+        "default": ["claude-opus-4.6", "claude-opus-4-6-thinking", "claude-sonnet-4.6", "claude-sonnet-4-6-thinking", "claude-haiku-4"]
       }
     }
   }
