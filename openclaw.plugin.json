@@ -1,6 +1,6 @@
 {
-  "id": "anthropic-max-proxy",
-  "providers": ["anthropic-max-proxy"],
+  "id": "anthropic-claude-proxy",
+  "providers": ["anthropic-claude-proxy"],
   "configSchema": {
     "type": "object",
     "additionalProperties": false,

@@ -1,4 +1,4 @@
-# OpenClaw Anthropic Max Proxy Plugin
+# OpenClaw Anthropic Claude Proxy Plugin
 
 Proxy-only Claude provider for OpenClaw using a local Anthropic-compatible proxy (e.g. `opencode-claude-max-proxy`). Routes all Claude model traffic through a local proxy that uses your Claude Code (`claude login`) credentials — no direct Anthropic API calls.
 
@@ -15,7 +15,7 @@ Proxy-only Claude provider for OpenClaw using a local Anthropic-compatible proxy
 OpenClaw Gateway
        |
        v
-anthropic-max-proxy provider (this plugin)
+anthropic-claude-proxy provider (this plugin)
        |
        v
 Local proxy (opencode-claude-max-proxy)
@@ -46,22 +46,22 @@ Run on any Linux machine/container/VPS where OpenClaw Gateway runs:
 ### Option 1: From GitHub (recommended)
 
 ```bash
-openclaw plugins install @rustyrayzor/anthropic-max-proxy
-openclaw plugins enable anthropic-max-proxy
+openclaw plugins install @rustyrayzor/anthropic-claude-proxy
+openclaw plugins enable anthropic-claude-proxy
 ```
 
 ### Option 2: From local source
 
 ```bash
-openclaw plugins install /path/to/anthropic-max-proxy
-openclaw plugins enable anthropic-max-proxy
+openclaw plugins install /path/to/anthropic-claude-proxy
+openclaw plugins enable anthropic-claude-proxy
 ```
 
 ### Option 3: From npm (if published)
 
 ```bash
-openclaw plugins install openclaw-anthropic-max-proxy
-openclaw plugins enable anthropic-max-proxy
+openclaw plugins install openclaw-anthropic-claude-proxy
+openclaw plugins enable anthropic-claude-proxy
 ```
 
 Then restart the Gateway:
@@ -75,7 +75,7 @@ openclaw gateway restart
 Run the interactive auth flow:
 
 ```bash
-openclaw models auth login --provider anthropic-max-proxy --set-default
+openclaw models auth login --provider anthropic-claude-proxy --set-default
 ```
 
 You'll be prompted for:
@@ -92,21 +92,21 @@ The easiest way to change the port:
 
 1. **Re-run auth flow** (it will pre-fill previous values):
    ```bash
-   openclaw models auth login --provider anthropic-max-proxy
+   openclaw models auth login --provider anthropic-claude-proxy
    ```
    Just press Enter through the host, then change the port when prompted.
 
 2. **Or edit config manually**:
    ```bash
    # Edit the provider config
-   openclaw models auth edit --provider anthropic-max-proxy
+   openclaw models auth edit --provider anthropic-claude-proxy
    ```
    Or directly in `openclaw.json`:
    ```json
    {
      "models": {
        "providers": {
-         "anthropic-max-proxy": {
+         "anthropic-claude-proxy": {
            "baseUrl": "http://127.0.0.1:9999"
          }
        }
@@ -116,8 +116,8 @@ The easiest way to change the port:
 
 This writes to your config:
 
-- Provider config → `models.providers.anthropic-max-proxy`
-- Default model → `anthropic-max-proxy/claude-opus-4.6`
+- Provider config → `models.providers.anthropic-claude-proxy`
+- Default model → `anthropic-claude-proxy/claude-opus-4.6`
 - Alias → `claude-max-proxy` points to the first model
 - **Fail-closed**: `fallbacks: []` (no direct Anthropic fallback)
 
@@ -128,9 +128,9 @@ This writes to your config:
 openclaw models status
 
 # Should show:
-# - Default: anthropic-max-proxy/claude-opus-4.6
+# - Default: anthropic-claude-proxy/claude-opus-4.6
 # - Fallbacks: (none)
-# - Aliases: claude-max-proxy -> anthropic-max-proxy/claude-opus-4.6
+# - Aliases: claude-max-proxy -> anthropic-claude-proxy/claude-opus-4.6
 ```
 
 ## Fail-Closed Guarantee
@@ -142,7 +142,7 @@ This plugin enforces **proxy-only routing**. The default model has no fallbacks:
   "agents": {
     "defaults": {
       "model": {
-        "primary": "anthropic-max-proxy/claude-opus-4.6",
+        "primary": "anthropic-claude-proxy/claude-opus-4.6",
         "fallbacks": []
       }
     }
@@ -163,7 +163,7 @@ Customize in `openclaw.json`:
 {
   "plugins": {
     "entries": {
-      "anthropic-max-proxy": {
+      "anthropic-claude-proxy": {
         "enabled": true,
         "config": {
           // Auto-start proxy when Gateway starts (default: true)
@@ -196,7 +196,7 @@ Check Gateway logs:
 openclaw gateway run --verbose
 ```
 
-Look for: `anthropic-max-proxy: starting proxy...`
+Look for: `anthropic-claude-proxy: starting proxy...`
 
 ### "Connection refused" errors?
 
@@ -232,7 +232,7 @@ Add a fallback in your config (not recommended for compliance):
   "agents": {
     "defaults": {
       "model": {
-        "primary": "anthropic-max-proxy/claude-opus-4.6",
+        "primary": "anthropic-claude-proxy/claude-opus-4.6",
         "fallbacks": ["openai-codex/gpt-5.3-codex"]
       }
     }

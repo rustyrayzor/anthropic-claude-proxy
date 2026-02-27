@@ -1,5 +1,5 @@
 {
-  "name": "@openclaw/anthropic-max-proxy",
+  "name": "@openclaw/anthropic-claude-proxy",
   "version": "0.1.0",
   "description": "OpenClaw provider plugin for Claude Max proxy (fail-closed, proxy-only routing).",
   "type": "module",

@@ -6,8 +6,8 @@ import {
   type ProviderAuthResult,
 } from "openclaw/plugin-sdk";
 
-const PROVIDER_ID = "anthropic-max-proxy";
-const PROVIDER_LABEL = "Claude Max Proxy";
+const PROVIDER_ID = "anthropic-claude-proxy";
+const PROVIDER_LABEL = "Claude Proxy Proxy";
 const PLACEHOLDER_TOKEN = "proxy-local";
 const DEFAULT_HOST = "127.0.0.1";
 const DEFAULT_PORT = 3456;
@@ -151,12 +151,12 @@ function createService(api: OpenClawPluginApi): OpenClawPluginService {
   ) => {
     const [bin, ...args] = cfg.command;
     if (!bin) {
-      logger.error("anthropic-max-proxy: command is empty; cannot start proxy");
+      logger.error("anthropic-claude-proxy: command is empty; cannot start proxy");
       return;
     }
 
     logger.info(
-      `anthropic-max-proxy: starting proxy (${formatCommand(cfg.command)}) on ${cfg.host}:${cfg.port}`,
+      `anthropic-claude-proxy: starting proxy (${formatCommand(cfg.command)}) on ${cfg.host}:${cfg.port}`,
     );
 
     const env = {
@@ -175,19 +175,19 @@ function createService(api: OpenClawPluginApi): OpenClawPluginService {
     proc.stdout.on("data", (chunk) => {
       const text = String(chunk).trim();
       if (text) {
-        logger.info(`anthropic-max-proxy: ${text}`);
+        logger.info(`anthropic-claude-proxy: ${text}`);
       }
     });
 
     proc.stderr.on("data", (chunk) => {
       const text = String(chunk).trim();
       if (text) {
-        logger.warn(`anthropic-max-proxy: ${text}`);
+        logger.warn(`anthropic-claude-proxy: ${text}`);
       }
     });
 
     proc.on("error", (err) => {
-      logger.error(`anthropic-max-proxy: process error: ${String(err)}`);
+      logger.error(`anthropic-claude-proxy: process error: ${String(err)}`);
     });
 
     proc.on("exit", (code, signal) => {
@@ -196,11 +196,11 @@ function createService(api: OpenClawPluginApi): OpenClawPluginService {
       }
 
       if (stopping) {
-        logger.info("anthropic-max-proxy: stopped");
+        logger.info("anthropic-claude-proxy: stopped");
         return;
       }
 
-      logger.warn(`anthropic-max-proxy: exited (code=${code ?? "null"}, signal=${signal ?? "null"})`);
+      logger.warn(`anthropic-claude-proxy: exited (code=${code ?? "null"}, signal=${signal ?? "null"})`);
 
       if (!cfg.autoRestart) {
         return;
@@ -209,16 +209,16 @@ function createService(api: OpenClawPluginApi): OpenClawPluginService {
       clearRestartTimer();
       restartTimer = setTimeout(() => startChild(cfg, logger), cfg.restartDelayMs);
       restartTimer.unref?.();
-      logger.info(`anthropic-max-proxy: restart scheduled in ${cfg.restartDelayMs}ms`);
+      logger.info(`anthropic-claude-proxy: restart scheduled in ${cfg.restartDelayMs}ms`);
     });
   };
 
   return {
-    id: "anthropic-max-proxy-service",
+    id: "anthropic-claude-proxy-service",
     async start(ctx) {
       const cfg = parsePluginConfig(api.pluginConfig);
       if (!cfg.autoStart) {
-        ctx.logger.info("anthropic-max-proxy: autoStart=false; service idle");
+        ctx.logger.info("anthropic-claude-proxy: autoStart=false; service idle");
         return;
       }
 
@@ -319,10 +319,10 @@ async function runLocalAuth(ctx: ProviderAuthContext, pluginCfg: Required<Plugin
 }
 
 const plugin = {
-  id: "anthropic-max-proxy",
-  name: "Anthropic Max Proxy",
+  id: "anthropic-claude-proxy",
+  name: "Anthropic Claude Proxy",
   description:
-    "Claude Max (Claude login) provider for OpenClaw via local anthropic-compatible proxy.",
+    "Claude Proxy (Claude login) provider for OpenClaw via local anthropic-compatible proxy.",
   configSchema: {
     jsonSchema: {
       type: "object",
@@ -364,7 +364,7 @@ const plugin = {
         {
           id: "local-proxy",
           label: "Local proxy",
-          hint: "Configure host/port + model ids for Claude Max proxy",
+          hint: "Configure host/port + model ids for Claude Proxy proxy",
           kind: "custom",
           run: async (ctx: ProviderAuthContext) => runLocalAuth(ctx, pluginCfg),
         },
