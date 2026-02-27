@@ -29,7 +29,7 @@ Anthropic API (via Claude Code)
 
 ## Requirements
 
-Run on the same machine/container as OpenClaw Gateway:
+Run on any Linux machine/container/VPS where OpenClaw Gateway runs:
 
 1. **Claude CLI installed** and authenticated:
    ```bash
@@ -37,6 +37,9 @@ Run on the same machine/container as OpenClaw Gateway:
    ```
 2. **Proxy command available** (default: `bunx opencode-claude-max-proxy`)
 3. **OpenClaw** installed and running
+4. **Port accessible** (default `3456`, configurable)
+
+> **Note:** If running proxy on a *different* machine than Gateway, set host to that machine's IP/hostname and ensure the port is accessible (check firewall/security groups).
 
 ## Install
 
@@ -80,8 +83,36 @@ You'll be prompted for:
 | Prompt | Default | Description |
 |--------|---------|-------------|
 | Proxy host | `127.0.0.1` | Where the proxy runs |
-| Proxy port | `3456` | Proxy HTTP port |
+| Proxy port | `3456` | Proxy HTTP port (easy to change) |
 | Model IDs | `claude-opus-4.6, claude-sonnet-4.5, claude-3.7-sonnet` | Which models to register |
+
+### Quick Port Change
+
+The easiest way to change the port:
+
+1. **Re-run auth flow** (it will pre-fill previous values):
+   ```bash
+   openclaw models auth login --provider anthropic-max-proxy
+   ```
+   Just press Enter through the host, then change the port when prompted.
+
+2. **Or edit config manually**:
+   ```bash
+   # Edit the provider config
+   openclaw models auth edit --provider anthropic-max-proxy
+   ```
+   Or directly in `openclaw.json`:
+   ```json
+   {
+     "models": {
+       "providers": {
+         "anthropic-max-proxy": {
+           "baseUrl": "http://127.0.0.1:9999"
+         }
+       }
+     }
+   }
+   ```
 
 This writes to your config:
 
