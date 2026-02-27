@@ -1,0 +1,25 @@
+{
+  "id": "anthropic-max-proxy",
+  "providers": ["anthropic-max-proxy"],
+  "configSchema": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "autoStart": { "type": "boolean", "default": true },
+      "autoRestart": { "type": "boolean", "default": true },
+      "restartDelayMs": { "type": "integer", "minimum": 1000, "default": 3000 },
+      "host": { "type": "string", "default": "127.0.0.1" },
+      "port": { "type": "integer", "minimum": 1, "maximum": 65535, "default": 3456 },
+      "command": {
+        "type": "array",
+        "items": { "type": "string" },
+        "default": ["bunx", "opencode-claude-max-proxy"]
+      },
+      "models": {
+        "type": "array",
+        "items": { "type": "string" },
+        "default": ["claude-opus-4.6", "claude-sonnet-4.5", "claude-3.7-sonnet"]
+      }
+    }
+  }
+}

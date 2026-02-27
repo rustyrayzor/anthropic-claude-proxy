@@ -1,0 +1,21 @@
+{
+  "name": "@openclaw/anthropic-max-proxy",
+  "version": "0.1.0",
+  "description": "OpenClaw provider plugin for Claude Max proxy (fail-closed, proxy-only routing).",
+  "type": "module",
+  "license": "MIT",
+  "private": false,
+  "openclaw": {
+    "extensions": [
+      "./index.ts"
+    ]
+  },
+  "keywords": [
+    "openclaw",
+    "openclaw-plugin",
+    "anthropic",
+    "claude",
+    "proxy",
+    "claude-max"
+  ]
+}
