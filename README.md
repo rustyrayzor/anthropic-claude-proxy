@@ -31,15 +31,39 @@ Anthropic API (via Claude Code)
 
 Run on any Linux machine/container/VPS where OpenClaw Gateway runs:
 
-1. **Claude CLI installed** and authenticated:
-   ```bash
-   claude login
-   ```
-2. **Proxy command available** (default: `bunx opencode-claude-max-proxy`)
+1. **Claude CLI installed** and authenticated (see auth options below)
+2. **Bun or Node.js** installed (for running the proxy)
 3. **OpenClaw** installed and running
 4. **Port accessible** (default `3456`, configurable)
 
-> **Note:** If running proxy on a *different* machine than Gateway, set host to that machine's IP/hostname and ensure the port is accessible (check firewall/security groups).
+### Authentication Methods
+
+#### Option A: OAuth Token (Recommended for containers/headless)
+
+For headless environments (containers, VPS, remote servers):
+
+```bash
+# Create a long-lived token
+claude setup-token
+
+# This gives you a token like:
+# sk-ant-oat01-us7xtRfbocBr__Zgb_sZJYe0DA-...
+
+# Set it as an environment variable
+export CLAUDE_CODE_OAUTH_TOKEN="sk-ant-oat01-..."
+```
+
+The token is valid for 1 year and works in headless environments where browser OAuth isn't possible.
+
+#### Option B: Interactive Login (Local machines only)
+
+For machines with a browser:
+
+```bash
+claude login
+```
+
+This opens a browser for OAuth. Works on your local machine but NOT in containers/VPS without browser access.
 
 ## Install
 
@@ -84,7 +108,7 @@ You'll be prompted for:
 |--------|---------|-------------|
 | Proxy host | `127.0.0.1` | Where the proxy runs |
 | Proxy port | `3456` | Proxy HTTP port (easy to change) |
-| Model IDs | `claude-opus-4.6, claude-sonnet-4.5, claude-3.7-sonnet` | Which models to register |
+| Model IDs | `claude-opus-4.6, claude-opus-4-6-thinking, claude-sonnet-4.6, claude-sonnet-4-6-thinking, claude-haiku-4` | Which models to register |
 
 ### Quick Port Change
 
@@ -189,6 +213,21 @@ Customize in `openclaw.json`:
 
 ## Troubleshooting
 
+### "OAuth error: Invalid code" in container/VPS
+
+Browser-based OAuth (`claude login`) doesn't work in headless containers because:
+- Claude redirects to `platform.claude.com` which can't call back to your container
+
+**Solution:** Use token-based authentication instead:
+```bash
+# Create token (one time)
+claude setup-token
+
+# Set environment variable before starting proxy
+export CLAUDE_CODE_OAUTH_TOKEN="sk-ant-oat01-..."
+bunx opencode-claude-max-proxy
+```
+
 ### Proxy not starting?
 
 Check Gateway logs:
@@ -202,6 +241,10 @@ Look for: `anthropic-claude-proxy: starting proxy...`
 
 1. Ensure proxy is running:
    ```bash
+   # With token auth
+   CLAUDE_CODE_OAUTH_TOKEN="sk-ant-oat01-..." bunx opencode-claude-max-proxy
+   
+   # Or with interactive login
    bunx opencode-claude-max-proxy
    ```
 
@@ -212,16 +255,14 @@ Look for: `anthropic-claude-proxy: starting proxy...`
 
 ### Claude not authenticated?
 
-Re-run:
+Check auth status:
 ```bash
-claude login
+claude auth status
 ```
 
-Then restart the proxy:
-```bash
-# Kill existing proxy, Gateway will auto-restart if enabled
-pkill -f opencode-claude-max-proxy
-```
+If not logged in:
+- **Local machine:** Run `claude login`
+- **Container/VPS:** Use `claude setup-token` for token-based auth
 
 ### Want to disable fail-closed?
 
@@ -245,6 +286,20 @@ Add a fallback in your config (not recommended for compliance):
 - This plugin does **not** modify the built-in `anthropic` provider — it's a separate provider.
 - Built-in `anthropic` remains untouched for direct API access if needed.
 - Designed for users who need strict compliance boundaries (proxy-only, no direct Anthropic calls).
+
+## Comparison with Manual Setup
+
+There's also an [official OpenClaw guide](https://docs.openclaw.ai/providers/claude-max-api-proxy) using the npm package. This plugin vs manual:
+
+| Feature | This Plugin | Manual Setup |
+|---------|-------------|--------------|
+| Auto-start proxy | ✅ | ❌ |
+| Provider in /model flows | ✅ | ❌ |
+| Fail-closed routing | ✅ | ❌ |
+| Easy install | ✅ | ❌ |
+| Works in containers | ✅ (with token) | ✅ (with token) |
+
+The plugin automates everything — manual setup requires more config.
 
 ## License
 
